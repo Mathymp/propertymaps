@@ -41,12 +41,12 @@ const LOTS = [
 ]
 
 const GALLERY = [
-  { id: 1, src: cldUp('dji-0181',                    'f_auto,q_auto:best,w_1400,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'), alt: 'Vista aérea dron — Mirador del Ñuble',     cls: 'col-span-2 row-span-2' },
-  { id: 2, src: cldUp('hero-terreno-vista-rio',       'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Vista al Río Ñuble desde el terreno',      cls: 'col-span-1 row-span-1' },
-  { id: 3, src: cldUp('rio-nuble-meandros-1',         'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Meandros del Río Ñuble',                   cls: 'col-span-1 row-span-1' },
-  { id: 4, src: cldUp('camino-interior-montanas',     'f_auto,q_auto:best,w_900,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Vistas a la cordillera desde el proyecto', cls: 'col-span-1 row-span-2' },
-  { id: 5, src: cldUp('bosque-con-rio-al-fondo',      'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Bosque nativo con el río al fondo',        cls: 'col-span-1 row-span-1' },
-  { id: 6, src: cldUp('dji-0183',                    'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Fotografía aérea dron del proyecto',       cls: 'col-span-1 row-span-1' },
+  { id: 1, src: cldUp('vista-aerea-bosque-lago',      'f_auto,q_auto:best,w_1400,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'), alt: 'Vista aérea bosque y lago — Mirador del Ñuble', cls: 'col-span-2 row-span-2' },
+  { id: 2, src: cldUp('hero-terreno-vista-rio',       'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Vista al Río Ñuble desde el terreno',           cls: 'col-span-1 row-span-1' },
+  { id: 3, src: cldUp('rio-nuble-meandros-1',         'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Meandros del Río Ñuble',                        cls: 'col-span-1 row-span-1' },
+  { id: 4, src: cldUp('camino-interior-montanas',     'f_auto,q_auto:best,w_900,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Vistas a la cordillera desde el proyecto',      cls: 'col-span-1 row-span-2' },
+  { id: 5, src: cldUp('bosque-con-rio-al-fondo',      'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Bosque nativo con el río al fondo',             cls: 'col-span-1 row-span-1' },
+  { id: 6, src: cldUp('camino-interior-bosque',       'f_auto,q_auto:best,w_800,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:5'),  alt: 'Camino interior entre el bosque del proyecto',  cls: 'col-span-1 row-span-1' },
 ]
 
 const STATUS_CFG = {
@@ -192,7 +192,7 @@ function Navbar() {
 // ─────────────────────────────────────────────────────────────
 
 function HeroSection() {
-  const heroImg = cldUp('dji-0182', 'f_auto,q_auto:best,w_1920,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:8')
+  const heroImg = cldUp('hero-terreno-vista-rio', 'f_auto,q_auto:best,w_1920,e_vibrance:85,e_saturation:50,e_sharpen:100,e_brightness:8')
 
   return (
     <section className="relative min-h-svh flex flex-col justify-end overflow-hidden">
