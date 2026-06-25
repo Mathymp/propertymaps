@@ -1,10 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans:   'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-serif:  'Cormorant Garamond', ui-serif, Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 
-  /* Brand palette */
   --color-brand-50:  #f0fdf4;
   --color-brand-100: #dcfce7;
   --color-brand-200: #bbf7d0;
@@ -16,32 +14,81 @@
   --color-brand-800: #166534;
   --color-brand-900: #14532d;
   --color-brand-950: #052e16;
-
-  /* Warm cream palette */
-  --color-cream-50:  #fdfcf9;
-  --color-cream-100: #f9f6f0;
-  --color-cream-200: #f2ede4;
-  --color-cream-300: #e8e0d2;
-  --color-cream-400: #d4c9b5;
-
-  /* Gold */
-  --color-gold:      #b8934a;
-  --color-gold-light:#d4b06a;
 }
 
-html { scroll-behavior: smooth; }
+html  { scroll-behavior: smooth; }
+*     { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+::selection { background: rgba(34,197,94,0.3); }
 
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ── Gradient text ─────────────────────────────────────────── */
+.grad-text {
+  background: linear-gradient(135deg, #fff 0%, #86efac 45%, #fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.grad-text-gold {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Ken Burns — hero fallback */
+/* ── Glassmorphism ─────────────────────────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+.glass-light {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* ── Ken Burns ─────────────────────────────────────────────── */
 @keyframes kenburns {
-  from { transform: scale(1.0) translate(0%,0%); }
-  to   { transform: scale(1.10) translate(-1.5%,-1%); }
+  from { transform: scale(1) translate(0,0); }
+  to   { transform: scale(1.10) translate(-1%,-1%); }
 }
-.animate-kenburns {
-  animation: kenburns 24s ease-in-out infinite alternate;
-  transform-origin: center center;
+.kb { animation: kenburns 22s ease-in-out infinite alternate; transform-origin: center; }
+
+/* ── Infinite marquee ──────────────────────────────────────── */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee 28s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Scroll reveal ─────────────────────────────────────────── */
+.reveal        { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.in     { opacity: 1; transform: translateY(0); }
+.reveal-l      { opacity: 0; transform: translateX(-32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-l.in   { opacity: 1; transform: translateX(0); }
+.reveal-r      { opacity: 0; transform: translateX(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-r.in   { opacity: 1; transform: translateX(0); }
+
+/* ── Glow button ───────────────────────────────────────────── */
+.btn-glow {
+  box-shadow: 0 0 0 0 rgba(34,197,94,0);
+  transition: box-shadow 0.3s ease, background 0.2s ease;
 }
+.btn-glow:hover {
+  box-shadow: 0 0 24px 4px rgba(34,197,94,0.35), 0 0 60px 8px rgba(34,197,94,0.12);
+}
+
+/* ── Horizontal carousel ───────────────────────────────────── */
+.carousel-track {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track:active { cursor: grabbing; }
+.carousel-item { scroll-snap-align: start; }
+
+/* ── Bento hover ───────────────────────────────────────────── */
+.bento-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.bento-card:hover { transform: translateY(-3px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
