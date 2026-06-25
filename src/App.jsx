@@ -379,21 +379,18 @@ function GaleriaCarousel() {
       <div className="overflow-hidden">
         <div
           ref={trackRef}
-          className="flex gap-3 overflow-x-scroll carousel-track pl-5 lg:pl-10 pr-5 lg:pr-10"
+          className="flex gap-3 overflow-x-scroll carousel-track px-5 lg:px-10"
           onMouseDown={onDown} onMouseUp={onUp} onMouseLeave={onUp} onMouseMove={onMove}
           onScroll={onScroll}
-          style={{ paddingRight:'calc(22vw + 1.25rem)' }}
         >
           {CAROUSEL_PHOTOS.map((ph, i) => (
-            <div key={i} className={`carousel-item shrink-0 relative overflow-hidden rounded-2xl transition-all duration-300 ${i === active ? 'opacity-100' : 'opacity-60'}`}
+            <div key={i} className={`carousel-item shrink-0 overflow-hidden rounded-2xl transition-all duration-300 ${i === active ? 'opacity-100' : 'opacity-55'}`}
               style={{ width:'78vw', maxWidth:700, aspectRatio:'4/3' }}>
-              <img src={ph.src} alt={ph.cap}
+              <img src={ph.src} alt={ph.alt || 'Mirador del Ñuble'}
                 className="w-full h-full object-cover"
                 loading="lazy"
                 draggable="false"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"/>
-              <div className="absolute bottom-4 left-5 text-white/80 text-xs font-medium">{ph.cap}</div>
             </div>
           ))}
         </div>
@@ -619,7 +616,12 @@ function Mapa() {
           {/* Mapa */}
           <div className="relative reveal-r">
             <div className="overflow-hidden rounded-2xl shadow-2xl shadow-black/60 border border-white/[0.06]">
-              <iframe src={src} width="100%" height="560" style={{border:0,display:'block'}}
+              <iframe src={src} width="100%" height="560"
+                style={{
+                  border: 0,
+                  display: 'block',
+                  filter: 'saturate(1.7) contrast(1.25) brightness(1.08) hue-rotate(-8deg)',
+                }}
                 allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
                 title="Ubicación Mirador del Ñuble"/>
             </div>
