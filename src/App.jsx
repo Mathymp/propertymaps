@@ -7,177 +7,141 @@ import { useState, useEffect } from 'react'
 const CLOUD  = 'dysqraxnh'
 const FOLDER = 'mirador-nuble'
 
-// Fotos: vibrance máx, saturación fuerte, contraste, sharpness, brightness
-const T_HERO = 'f_auto,q_auto:best,w_1920,e_vibrance:100,e_saturation:70,e_contrast:40,e_sharpen:150,e_brightness:8'
-const T_SECT = 'f_auto,q_auto:best,w_1100,e_vibrance:100,e_saturation:70,e_contrast:40,e_sharpen:150,e_brightness:8'
-const T_GAL  = 'f_auto,q_auto:best,w_1200,e_vibrance:100,e_saturation:70,e_contrast:40,e_sharpen:150,e_brightness:8'
-const T_LOGO = 'f_auto,q_auto:best,w_480'
+const photo = (name, w = 1920) =>
+  `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto:best,w_${w},e_vibrance:90,e_saturation:60,e_contrast:35,e_sharpen:120,e_brightness:8/${FOLDER}/${name}`
 
-const img = (name, t = T_HERO) => `https://res.cloudinary.com/${CLOUD}/image/upload/${t}/${FOLDER}/${name}`
-
-const LOGO_BLANCO = img('logo-mirador-blanco', T_LOGO)
-const LOGO_VERDE  = img('logo-mirador-verde',  T_LOGO)
-const VIDEO_URL   = `https://res.cloudinary.com/${CLOUD}/video/upload/vc_h264,q_auto:low,w_1280,fps_24/${FOLDER}/video-hero.mp4`
+const LOGO_W = `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto:best,w_420/${FOLDER}/logo-mirador-blanco.png`
+const LOGO_G = `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto:best,w_420/${FOLDER}/logo-mirador-verde.png`
+const VIDEO  = `https://res.cloudinary.com/${CLOUD}/video/upload/vc_h264,q_auto,w_1280/${FOLDER}/video-hero.mp4`
 
 // ─────────────────────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────────────────────
 
-// TODAS las parcelas disponibles — proyecto en preventa verde
 const LOTS = [
   { id:1,  label:'P-01', size:'5.000 m²',  price:'$14.900.000', view:'Vista Río Ñuble' },
   { id:2,  label:'P-02', size:'5.500 m²',  price:'$15.950.000', view:'Vista Río Ñuble' },
   { id:3,  label:'P-03', size:'6.000 m²',  price:'$16.800.000', view:'Vista cordillera' },
   { id:4,  label:'P-04', size:'7.200 m²',  price:'$19.440.000', view:'Vista cordillera' },
-  { id:5,  label:'P-05', size:'8.000 m²',  price:'Consultar',   view:'Vista 360°',       star: true },
+  { id:5,  label:'P-05', size:'8.000 m²',  price:'Consultar',   view:'Vista 360°',      star:true },
   { id:6,  label:'P-06', size:'6.800 m²',  price:'$18.360.000', view:'Lomaje poniente' },
   { id:7,  label:'P-07', size:'5.200 m²',  price:'$15.080.000', view:'Lomaje poniente' },
   { id:8,  label:'P-08', size:'5.800 m²',  price:'$16.530.000', view:'Vista Río Ñuble' },
-  { id:9,  label:'P-09', size:'7.500 m²',  price:'Consultar',   view:'Vista Río Ñuble',  star: true },
-  { id:10, label:'P-10', size:'9.200 m²',  price:'Consultar',   view:'Vista panorámica', star: true },
+  { id:9,  label:'P-09', size:'7.500 m²',  price:'Consultar',   view:'Vista Río Ñuble',  star:true },
+  { id:10, label:'P-10', size:'9.200 m²',  price:'Consultar',   view:'Vista panorámica', star:true },
   { id:11, label:'P-11', size:'6.100 m²',  price:'$17.385.000', view:'Lomaje sur' },
   { id:12, label:'P-12', size:'5.600 m²',  price:'$15.960.000', view:'Lomaje sur' },
   { id:13, label:'P-13', size:'6.400 m²',  price:'Consultar',   view:'Vista bosque' },
-  { id:14, label:'P-14', size:'7.800 m²',  price:'Consultar',   view:'Vista bosque',     star: true },
-  { id:15, label:'P-15', size:'10.500 m²', price:'Consultar',   view:'Vista 360°',       star: true },
+  { id:14, label:'P-14', size:'7.800 m²',  price:'Consultar',   view:'Vista bosque',    star:true },
+  { id:15, label:'P-15', size:'10.500 m²', price:'Consultar',   view:'Vista 360°',      star:true },
   { id:16, label:'P-16', size:'8.200 m²',  price:'Consultar',   view:'Lomaje oriente' },
   { id:17, label:'P-17', size:'6.700 m²',  price:'$19.095.000', view:'Lomaje oriente' },
   { id:18, label:'P-18', size:'5.900 m²',  price:'$16.815.000', view:'Vista valle' },
   { id:19, label:'P-19', size:'7.100 m²',  price:'Consultar',   view:'Vista valle' },
-  { id:20, label:'P-20', size:'12.000 m²', price:'Consultar',   view:'Parcela premium',  star: true },
-]
-
-const GALLERY = [
-  { id:1, src: img('vista-aerea-bosque-lago', T_GAL), alt:'Vista aérea del proyecto y bosque',        cls:'col-span-2 row-span-2' },
-  { id:2, src: img('hero-terreno-vista-rio',  T_GAL), alt:'Vista al Río Ñuble',                      cls:'col-span-1 row-span-1' },
-  { id:3, src: img('rio-nuble-meandros-1',    T_GAL), alt:'Meandros del Río Ñuble',                  cls:'col-span-1 row-span-1' },
-  { id:4, src: img('camino-interior-montanas',T_GAL), alt:'Vista a la cordillera desde el terreno',  cls:'col-span-1 row-span-2' },
-  { id:5, src: img('bosque-con-rio-al-fondo', T_GAL), alt:'Bosque nativo con Río Ñuble al fondo',   cls:'col-span-1 row-span-1' },
-  { id:6, src: img('camino-interior-bosque',  T_GAL), alt:'Camino interior del proyecto',            cls:'col-span-1 row-span-1' },
+  { id:20, label:'P-20', size:'12.000 m²', price:'Consultar',   view:'Parcela premium', star:true },
 ]
 
 const VENTAJAS = [
-  { ico:'🛡️', title:'Escrituración garantizada',          desc:'100% transparente desde el primer pago. Sin letra chica. Tu inversión protegida en todo momento.',            val:'100%' },
-  { ico:'📈', title:'Precio de lanzamiento — compra ahora', desc:'El mejor precio es hoy. Una vez emitidos los roles, la plusvalía sube y el precio también.',                val:'Ahora' },
-  { ico:'🛣️', title:'Acceso asfaltado + vialidad interior', desc:'Camino 100% asfaltado hasta la entrada. Caminos interiores compactados, acceso cómodo todo el año.',      val:'✔' },
-  { ico:'💧', title:'Agua potable y electricidad incluidos', desc:'Servicios básicos disponibles en cada sitio. Todo listo para construir en cuanto obtengas el permiso.', val:'✔' },
-  { ico:'🌊', title:'Vistas y acceso al Río Ñuble',         desc:'El Río Ñuble como fondo permanente de tu propiedad. Paisaje natural único a pocos minutos.',              val:'✔' },
-  { ico:'💳', title:'Financiamiento directo y flexible',    desc:'Pie accesible, cuotas adaptadas a tu presupuesto. Sin trámites bancarios complicados.',                   val:'Flex.' },
+  { n:'01', title:'Escrituración garantizada', desc:'Proceso 100% transparente desde el primer pago. Tu inversión protegida en todo momento.' },
+  { n:'02', title:'Precio de lanzamiento',     desc:'El mejor precio es hoy. Comprar en verde es comprar antes de que llegue la plusvalía.' },
+  { n:'03', title:'Acceso asfaltado',          desc:'Camino asfaltado hasta la entrada. Vialidad interior compactada. Cómodo todo el año.' },
+  { n:'04', title:'Servicios incluidos',       desc:'Agua potable rural y electricidad disponibles en cada sitio. Listo para construir.' },
+  { n:'05', title:'Vista al Río Ñuble',        desc:'Paisaje natural único como fondo de tu vida. El río visible desde los sitios del proyecto.' },
+  { n:'06', title:'Financiamiento flexible',   desc:'Pie accesible, cuotas a tu medida. Sin trámites bancarios complicados.' },
 ]
 
-const PROX = [
-  { time:'3',    unit:'min',    place:'Puente El Ala',  note:'Acceso principal · camino asfaltado' },
-  { time:'15',   unit:'min',    place:'Chillán',        note:'Servicios, hospitales, comercio' },
-  { time:'1:20', unit:'horas',  place:'Concepción',     note:'Ciudad regional · aeropuerto' },
-]
-
-const MAP_TAGS = [
-  '📍 3 min · Puente El Ala',
-  '🏙️ 15 min · Chillán',
-  '🚗 1h 20 · Concepción',
-  '🌊 Vista directa · Río Ñuble',
-  '🛣️ Acceso 100% asfaltado',
-  '🏔️ 75 km · Termas de Chillán',
-  '⛷️ 70 km · Valle Las Trancas',
+const GALLERY_IMGS = [
+  { src: photo('vista-aerea-bosque-lago', 1400), alt:'Vista aérea del proyecto', wide: true  },
+  { src: photo('rio-nuble-meandros-1',    800),  alt:'Meandros del Río Ñuble',   wide: false },
+  { src: photo('bosque-con-rio-al-fondo', 800),  alt:'Bosque nativo',            wide: false },
+  { src: photo('camino-interior-montanas',1000), alt:'Vistas a la cordillera',   wide: true  },
+  { src: photo('hero-terreno-vista-rio',  800),  alt:'Vista al río desde terreno',wide: false },
+  { src: photo('camino-interior-bosque',  800),  alt:'Camino interior',          wide: false },
 ]
 
 // ─────────────────────────────────────────────────────────────
 // ICONS
 // ─────────────────────────────────────────────────────────────
 
-const Arrow    = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-const Check    = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-const MapPin   = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-const Phone    = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-const Mail     = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-const ExtLink  = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-const Chevron  = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
-const Instagram= p => <svg {...p} fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-
-// ─────────────────────────────────────────────────────────────
-// LABEL
-// ─────────────────────────────────────────────────────────────
-
-function Label({ text, gold }) {
-  return (
-    <div className="flex items-center gap-3 mb-5">
-      <span className={`block w-6 h-px ${gold ? 'bg-amber-400' : 'bg-brand-500'}`} />
-      <span className={`text-[10px] font-bold tracking-[0.32em] uppercase ${gold ? 'text-amber-400' : 'text-brand-500'}`}>
-        {text}
-      </span>
-    </div>
-  )
-}
+const Arrow   = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+const Check   = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+const Pin     = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+const Phone   = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+const Mail    = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+const ExtLink = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+const ChevD   = p => <svg {...p} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
+const Play    = p => <svg {...p} fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+const IG      = p => <svg {...p} fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
 
 // ─────────────────────────────────────────────────────────────
 // NAVBAR
 // ─────────────────────────────────────────────────────────────
 
 function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [solid, setSolid] = useState(false)
+  const [open,  setOpen]  = useState(false)
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 80)
+    const fn = () => setSolid(window.scrollY > 80)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
   const links = [
-    { label:'El Proyecto', href:'#proyecto'  },
-    { label:'Parcelas',    href:'#parcelas'  },
-    { label:'Galería',     href:'#galeria'   },
-    { label:'Ubicación',   href:'#ubicacion' },
-    { label:'Contacto',    href:'#contacto'  },
+    { label:'Proyecto',  href:'#proyecto'  },
+    { label:'Parcelas',  href:'#parcelas'  },
+    { label:'Galería',   href:'#galeria'   },
+    { label:'Ubicación', href:'#ubicacion' },
   ]
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? 'bg-[#080f08]/95 backdrop-blur-md border-b border-white/5 shadow-xl shadow-black/40' : ''}`}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between py-5">
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${solid ? 'bg-white/96 backdrop-blur-lg border-b border-zinc-100 shadow-sm' : ''}`}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-16 lg:h-18">
 
-        <a href="#" className="flex items-center gap-3">
-          <div className={`w-7 h-7 flex items-center justify-center rounded transition-all ${scrolled ? 'bg-brand-600' : 'bg-white/10 border border-white/20'}`}>
-            <span className="text-white text-[10px] font-bold tracking-wider">PM</span>
+        {/* Property Maps wordmark */}
+        <a href="#" className="flex items-center gap-2.5">
+          <div className={`w-6 h-6 rounded flex items-center justify-center transition-colors ${solid ? 'bg-brand-700' : 'bg-white/20 border border-white/30'}`}>
+            <span className="text-white text-[9px] font-bold tracking-wider">PM</span>
           </div>
-          <span className={`text-[12px] font-semibold tracking-[0.22em] uppercase transition-colors ${scrolled ? 'text-white' : 'text-white/80'}`}>
+          <span className={`text-[11px] font-semibold tracking-[0.25em] uppercase transition-colors ${solid ? 'text-zinc-800' : 'text-white/90'}`}>
             Property Maps
           </span>
         </a>
 
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-9">
           {links.map(l => (
             <a key={l.href} href={l.href}
-              className="text-[12px] font-medium text-white/60 hover:text-white tracking-wide transition-colors">
+              className={`text-[12px] tracking-wide transition-colors hover:opacity-60 ${solid ? 'text-zinc-600' : 'text-white/75'}`}>
               {l.label}
             </a>
           ))}
-          <a href="#contacto"
-            className="text-[12px] font-bold px-5 py-2.5 border border-amber-400/50 text-amber-400 hover:bg-amber-400 hover:text-black tracking-widest uppercase rounded-sm transition-all">
-            Cotizar
-          </a>
         </nav>
 
-        <button onClick={() => setOpen(!open)} className="lg:hidden text-white p-1">
+        <a href="#contacto"
+          className={`hidden lg:inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] uppercase px-5 py-2.5 rounded-sm transition-all ${solid ? 'bg-brand-700 text-white hover:bg-brand-800' : 'border border-white/40 text-white hover:bg-white/10'}`}>
+          Cotizar parcela
+        </a>
+
+        <button onClick={() => setOpen(!open)} className={`lg:hidden p-1 ${solid ? 'text-zinc-700' : 'text-white'}`}>
           <div className="space-y-[5px]">
-            <span className={`block w-6 h-[2px] bg-current transition-all ${open ? 'rotate-45 translate-y-[7px]' : ''}`} />
-            <span className={`block w-6 h-[2px] bg-current transition-opacity ${open ? 'opacity-0' : ''}`} />
-            <span className={`block w-6 h-[2px] bg-current transition-all ${open ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+            <span className={`block w-5 h-[1.5px] bg-current transition-all ${open ? 'rotate-45 translate-y-[6.5px]' : ''}`} />
+            <span className={`block w-5 h-[1.5px] bg-current transition-opacity ${open ? 'opacity-0' : ''}`} />
+            <span className={`block w-5 h-[1.5px] bg-current transition-all ${open ? '-rotate-45 -translate-y-[6.5px]' : ''}`} />
           </div>
         </button>
       </div>
 
       {open && (
-        <div className="lg:hidden bg-[#080f08] border-t border-white/5 px-6 pt-2 pb-6">
+        <div className="lg:hidden bg-white border-t border-zinc-100 px-6 pb-6">
           {links.map(l => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)}
-              className="flex items-center justify-between py-3.5 text-sm text-white/70 border-b border-white/5 last:border-0">
-              {l.label}
-              <Arrow className="w-3 h-3 text-white/30" />
+              className="flex items-center justify-between py-3.5 text-sm text-zinc-600 border-b border-zinc-50 last:border-0">
+              {l.label}<Arrow className="w-3 h-3 text-zinc-300" />
             </a>
           ))}
           <a href="#contacto" onClick={() => setOpen(false)}
-            className="block text-center mt-5 py-3 border border-amber-400/50 text-amber-400 text-sm font-bold tracking-widest uppercase rounded-sm">
-            Cotizar Parcela
+            className="block text-center mt-5 py-3 bg-brand-700 text-white text-sm font-semibold rounded-sm tracking-wide">
+            Cotizar parcela
           </a>
         </div>
       )}
@@ -186,222 +150,186 @@ function Navbar() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// HERO — video de fondo, logo centrado, oscuro dramático
+// HERO — fotografía limpia, logo grande, texto mínimo
 // ─────────────────────────────────────────────────────────────
 
-function HeroSection() {
-  const [videoOk,   setVideoOk]   = useState(false)
-  const [videoFail, setVideoFail] = useState(false)
-
-  const heroPoster = img('hero-terreno-vista-rio', T_HERO)
-
+function Hero() {
   return (
-    <section className="relative min-h-svh flex flex-col justify-end overflow-hidden bg-[#040a04] grain">
-
-      {/* ── Background (video sobre foto) ─────────────────── */}
+    <section className="relative min-h-svh flex flex-col justify-end overflow-hidden">
+      {/* Foto del terreno — Ken Burns suave */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Foto con Ken Burns — visible mientras carga video o si falla */}
         <img
-          src={heroPoster}
+          src={photo('vista-aerea-bosque-lago', 1920)}
           alt="Mirador del Ñuble — vista aérea"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1500 ${videoOk ? 'opacity-0' : 'opacity-100'} ${videoFail ? 'animate-kenburns' : ''}`}
-          loading="eager"
-          fetchPriority="high"
-          style={videoFail ? {} : {}}
+          className="w-full h-full object-cover object-center animate-kenburns"
+          loading="eager" fetchPriority="high"
         />
-        {/* Video de fondo (si está disponible en Cloudinary) */}
-        {!videoFail && (
-          <video
-            autoPlay muted loop playsInline
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1500 ${videoOk ? 'opacity-100' : 'opacity-0'}`}
-            onLoadedData={() => setVideoOk(true)}
-            onError={() => setVideoFail(true)}
-            poster={heroPoster}
-          >
-            <source src={VIDEO_URL} type="video/mp4" />
-          </video>
-        )}
-
-        {/* Overlays — degradé oscuro dramático */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 to-black/25" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
+        {/* Overlay suave — no tan oscuro */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
       </div>
 
-      {/* ── Contenido ─────────────────────────────────────── */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full pb-20 lg:pb-28 pt-36">
+      {/* Contenido */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full pb-24 lg:pb-32 pt-32">
 
-        {/* Logo Mirador del Ñuble — prominente */}
-        <div className="mb-10">
-          <img
-            src={LOGO_BLANCO}
-            alt="Mirador del Ñuble"
-            className="h-16 sm:h-20 lg:h-24 w-auto object-contain"
-            loading="eager"
-          />
-        </div>
+        {/* Logo del proyecto */}
+        <img src={LOGO_W} alt="Mirador del Ñuble"
+          className="h-14 sm:h-18 lg:h-20 w-auto object-contain object-left mb-10"
+          loading="eager"
+        />
 
-        {/* Eyebrow */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="block w-8 h-px bg-amber-400" />
-          <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-amber-400">
-            Preventa en Verde · Región del Ñuble · Chile
-          </span>
-        </div>
+        {/* Tag */}
+        <p className="text-white/50 text-[11px] tracking-[0.3em] uppercase mb-5">
+          Parcelas agrícolas · Región del Ñuble · Chile
+        </p>
 
-        {/* Headline */}
-        <h1 className="font-extrabold leading-[0.9] tracking-tight text-white mb-6">
-          <span className="block text-5xl sm:text-7xl lg:text-[88px]">Parcelas junto</span>
-          <span className="block text-5xl sm:text-7xl lg:text-[88px] text-amber-400 ml-4 sm:ml-10 lg:ml-20">
-            al Río Ñuble
-          </span>
+        {/* Título serif grande */}
+        <h1 className="font-serif font-light text-white leading-[1] tracking-tight mb-7"
+          style={{ fontSize: 'clamp(3rem, 9vw, 8rem)' }}>
+          Tu terreno<br />
+          <em className="not-italic font-normal" style={{ color:'#d4b06a' }}>junto al río</em>
         </h1>
 
-        <p className="text-white/65 text-base sm:text-lg leading-relaxed max-w-lg mb-3">
-          Proyecto en proceso de obtención de Rol individual SAG. La oportunidad de adquirir al
-          <strong className="text-white"> precio de lanzamiento</strong> — antes de que la plusvalía llegue.
-        </p>
-        <p className="text-white/40 text-sm mb-10">
-          20 parcelas · 5.000 a 12.000 m² · Acceso asfaltado · 15 min de Chillán
+        <p className="text-white/55 text-base lg:text-lg leading-relaxed max-w-md mb-10 font-light">
+          20 parcelas privadas a 15 minutos de Chillán, con vistas directas al Río Ñuble.
+          Preventa en verde — <span className="text-white/80">precio de lanzamiento desde $14.900.000.</span>
         </p>
 
-        {/* CTAs */}
         <div className="flex flex-wrap gap-3">
           <a href="#parcelas"
-            className="inline-flex items-center gap-2.5 bg-amber-400 text-black text-sm font-bold px-8 py-4 rounded-sm hover:bg-amber-300 transition-all tracking-wider uppercase">
+            className="inline-flex items-center gap-2.5 bg-white text-zinc-900 text-[12px] font-semibold px-7 py-4 rounded-sm hover:bg-zinc-100 transition-colors tracking-widest uppercase">
             Ver Parcelas
             <Arrow className="w-4 h-4" />
           </a>
           <a href="#contacto"
-            className="inline-flex items-center gap-2.5 border border-white/25 text-white text-sm font-medium px-8 py-4 rounded-sm hover:bg-white/8 transition-all tracking-wide">
-            Hablar con un Asesor
+            className="inline-flex items-center gap-2.5 border border-white/30 text-white text-[12px] font-medium px-7 py-4 rounded-sm hover:bg-white/8 transition-colors tracking-wide">
+            Hablar con un asesor
           </a>
         </div>
-
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/5 border border-white/5 rounded-sm overflow-hidden">
-          {[
-            { val:'$14,9M',   label:'Precio desde',         note:'Precio de lanzamiento' },
-            { val:'5.000 m²', label:'Superficie mínima',    note:'Hasta 12.000 m²' },
-            { val:'2027',     label:'Entrega estimada',      note:'Proyecto en verde' },
-            { val:'15 min',   label:'de Chillán',           note:'Acceso asfaltado' },
-          ].map((s, i) => (
-            <div key={i} className="bg-black/30 backdrop-blur-sm px-5 py-5">
-              <div className="text-2xl sm:text-3xl font-black text-amber-400 leading-none mb-1">{s.val}</div>
-              <div className="text-[10px] font-bold text-white/80 tracking-[0.18em] uppercase">{s.label}</div>
-              <div className="text-[10px] text-white/30 mt-0.5">{s.note}</div>
-            </div>
-          ))}
-        </div>
       </div>
 
-      <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 opacity-30 pointer-events-none">
-        <span className="text-white text-[9px] tracking-[0.3em] uppercase">Descubrir</span>
-        <Chevron className="w-4 h-4 text-white animate-bounce" />
+      {/* Scroll hint */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-30 pointer-events-none">
+        <ChevD className="w-5 h-5 text-white animate-bounce" />
       </div>
     </section>
   )
 }
 
 // ─────────────────────────────────────────────────────────────
-// PROXIMIDAD — strip oscuro con 3 números grandes
+// STATS BAR — 5 números clave, fondo blanco limpio
 // ─────────────────────────────────────────────────────────────
 
-function ProximitySection() {
-  return (
-    <section className="bg-[#080f08] border-y border-white/5">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/5">
-          {PROX.map((p, i) => (
-            <div key={i} className="py-10 sm:py-12 px-0 sm:px-10 first:pl-0 last:pr-0">
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-5xl lg:text-6xl font-black text-white tabular-nums">{p.time}</span>
-                <span className="text-amber-400 text-xs font-bold uppercase tracking-widest">{p.unit}</span>
-              </div>
-              <div className="text-white font-semibold text-lg mb-0.5">{p.place}</div>
-              <div className="text-white/30 text-xs">{p.note}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────
-// PROYECTO — foto full-bleed, logo, contenido oscuro
-// ─────────────────────────────────────────────────────────────
-
-function ProjectSection() {
-  const features = [
-    'Caminos interiores compactados y estabilizados',
-    'Vista directa y acceso al Río Ñuble',
-    'A 3 minutos del Puente El Ala (acceso asfaltado)',
-    'Agua potable rural y electricidad en cada sitio',
-    'Vegetación nativa: robles, avellanos, boldos',
-    'Escrituración garantizada al obtener Rol SAG',
-    'Parcelas desde 5.000 m² · Financiamiento disponible',
+function StatsBar() {
+  const stats = [
+    { val:'$14,9M',    label:'Precio desde' },
+    { val:'5.000 m²',  label:'Superficie mínima' },
+    { val:'20',        label:'Parcelas totales' },
+    { val:'15 min',    label:'De Chillán' },
+    { val:'2027',      label:'Entrega estimada' },
   ]
 
   return (
-    <section id="proyecto" className="bg-[#080f08]">
-      <div className="grid lg:grid-cols-2 min-h-[80vh]">
+    <section className="bg-white border-b border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-2 sm:grid-cols-5 divide-x divide-zinc-100">
+          {stats.map((s, i) => (
+            <div key={i} className="py-8 px-5 first:pl-0 last:pr-0 text-center sm:text-left">
+              <div className="font-serif text-3xl lg:text-4xl text-zinc-900 font-light leading-none mb-1.5"
+                style={{ color: i === 0 ? '#b8934a' : undefined }}>
+                {s.val}
+              </div>
+              <div className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-medium">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
-        {/* Foto full-height */}
-        <div className="relative overflow-hidden min-h-[50vh] lg:min-h-0">
-          <img
-            src={img('terreno-camino-rio-nuble', T_SECT)}
-            alt="Terreno con vista al Río Ñuble"
-            className="absolute inset-0 w-full h-full object-cover hover:scale-103 transition-transform duration-1000"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#080f08]/60" />
-          {/* Caption */}
-          <div className="absolute bottom-5 left-5 text-white/40 text-[10px] tracking-widest uppercase">
-            Vistas reales del proyecto · Región del Ñuble
-          </div>
+// ─────────────────────────────────────────────────────────────
+// PROYECTO — editorial split, serif heading, logo visible
+// ─────────────────────────────────────────────────────────────
+
+function Proyecto() {
+  const features = [
+    'Acceso directo y vistas al Río Ñuble',
+    'A 3 minutos del Puente El Ala',
+    'Agua potable rural y electricidad en cada sitio',
+    'Vegetación nativa: robles, avellanos, boldos',
+    'Escrituración garantizada al obtener Rol SAG',
+    'Financiamiento directo disponible',
+  ]
+
+  return (
+    <section id="proyecto" className="bg-white py-24 lg:py-36">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+        {/* Label */}
+        <div className="flex items-center gap-4 mb-14">
+          <span className="block h-px w-12 bg-zinc-200" />
+          <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">El Proyecto</span>
         </div>
 
-        {/* Contenido */}
-        <div className="px-8 lg:px-16 py-20 lg:py-28 flex flex-col justify-center">
-          <Label text="El Proyecto" gold />
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
-          {/* Logo del proyecto aquí */}
-          <img
-            src={LOGO_BLANCO}
-            alt="Mirador del Ñuble"
-            className="h-10 w-auto object-contain object-left mb-8 opacity-80"
-            loading="lazy"
-          />
+          {/* Texto */}
+          <div>
+            {/* Logo del proyecto aquí */}
+            <img src={LOGO_G} alt="Mirador del Ñuble"
+              className="h-10 w-auto object-contain object-left mb-8 opacity-70"
+            />
 
-          <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight mb-6">
-            Vive donde el río<br />
-            <span className="text-amber-400">y la montaña se encuentran</span>
-          </h2>
+            <h2 className="font-serif font-light text-zinc-900 leading-[1.1] mb-8"
+              style={{ fontSize:'clamp(2.2rem, 5vw, 4rem)' }}>
+              Vive donde el río<br />
+              <em className="not-italic font-normal" style={{ color:'#b8934a' }}>
+                y la montaña se encuentran
+              </em>
+            </h2>
 
-          <p className="text-white/55 leading-relaxed mb-3 text-[15px]">
-            Mirador del Ñuble está ubicado a <strong className="text-white">3 minutos del Puente El Ala</strong>, con
-            acceso directo y vistas privilegiadas al Río Ñuble. Un entorno natural único a pocos minutos de la ciudad.
-          </p>
-          <p className="text-white/40 text-sm leading-relaxed mb-10">
-            Proyecto en proceso de obtención de Rol SAG individual. Subdivisión en trámite.
-            Preventa en verde con entrega estimada para el 2° semestre de 2027.
-          </p>
+            <p className="text-zinc-500 leading-relaxed mb-4 text-[15px]">
+              Mirador del Ñuble está ubicado a <strong className="text-zinc-700 font-semibold">3 minutos del Puente El Ala</strong>,
+              con acceso directo y vistas al Río Ñuble. Proyecto en proceso de obtención de Rol SAG individual —
+              la oportunidad de comprar al precio más bajo antes de la plusvalía.
+            </p>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-10">
+              Proyecto en verde con entrega estimada para el 2° semestre de 2027.
+            </p>
 
-          <ul className="space-y-3 mb-10">
-            {features.map((f, i) => (
-              <li key={i} className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-brand-500 mt-0.5 shrink-0" />
-                <span className="text-white/60 text-sm">{f}</span>
-              </li>
-            ))}
-          </ul>
+            <ul className="space-y-3 mb-10">
+              {features.map((f, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <Check className="w-4 h-4 text-brand-600 mt-0.5 shrink-0" />
+                  <span className="text-zinc-500 text-sm">{f}</span>
+                </li>
+              ))}
+            </ul>
 
-          {/* Badge preventa */}
-          <div className="inline-flex items-center gap-2.5 border border-amber-400/30 bg-amber-400/5 px-4 py-2.5 rounded-sm self-start">
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
-            <span className="text-amber-400 text-[10px] font-bold tracking-[0.2em] uppercase">
-              Preventa · Precio de Lanzamiento · Cupos Limitados
-            </span>
+            <a href="#parcelas"
+              className="inline-flex items-center gap-2.5 border border-zinc-800 text-zinc-800 text-[11px] font-semibold px-7 py-3.5 rounded-sm hover:bg-zinc-800 hover:text-white transition-all tracking-widest uppercase">
+              Ver parcelas disponibles
+              <Arrow className="w-3.5 h-3.5" />
+            </a>
+          </div>
+
+          {/* Foto */}
+          <div className="relative">
+            <div className="aspect-[4/5] overflow-hidden rounded-sm">
+              <img src={photo('terreno-camino-rio-nuble', 900)}
+                alt="Terreno junto al Río Ñuble"
+                className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-1000"
+                loading="lazy"
+              />
+            </div>
+            {/* Floating card */}
+            <div className="absolute -bottom-6 -right-4 lg:-right-8 bg-white shadow-xl border border-zinc-100 px-5 py-4 rounded-sm">
+              <div className="font-serif text-2xl font-light text-zinc-900 leading-none mb-1" style={{ color:'#b8934a' }}>
+                3 min
+              </div>
+              <div className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase">Del Puente El Ala</div>
+            </div>
           </div>
         </div>
       </div>
@@ -410,49 +338,129 @@ function ProjectSection() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// PARCELAS — loteo interactivo, todas disponibles
+// VIDEO SHOWCASE — sección dedicada al video dron
 // ─────────────────────────────────────────────────────────────
 
-function ParcelasSection() {
-  const [sel, setSel] = useState(null)
+function VideoShowcase() {
+  const [play, setPlay] = useState(false)
 
   return (
-    <section id="parcelas" className="bg-[#040a04] py-28 lg:py-40">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+    <section className="bg-zinc-50 py-24 lg:py-32 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-14 gap-6">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-5">
           <div>
-            <Label text="Disponibilidad · 20 Parcelas" gold />
-            <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
-              Todas disponibles —<br />
-              <span className="text-amber-400">elige la tuya hoy</span>
+            <div className="flex items-center gap-4 mb-5">
+              <span className="block h-px w-12 bg-zinc-200" />
+              <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">Conoce el terreno</span>
+            </div>
+            <h2 className="font-serif font-light text-zinc-900 leading-tight"
+              style={{ fontSize:'clamp(2rem, 4vw, 3.5rem)' }}>
+              Recorre el proyecto<br />
+              <em className="not-italic" style={{ color:'#b8934a' }}>desde el aire</em>
             </h2>
           </div>
-          <div className="flex items-center gap-3 border border-brand-500/30 bg-brand-500/8 px-4 py-3 rounded-sm self-start lg:self-auto">
-            <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse shrink-0" />
-            <span className="text-brand-400 text-xs font-bold tracking-widest uppercase">20/20 disponibles</span>
+          <p className="text-zinc-400 text-sm max-w-xs leading-relaxed">
+            Grabado en 4K con dron profesional. Visita virtual del terreno, el río y el entorno natural.
+          </p>
+        </div>
+
+        {/* Video player elegante */}
+        <div className="relative overflow-hidden rounded-sm bg-zinc-900 shadow-2xl" style={{ aspectRatio:'16/9' }}>
+          {!play ? (
+            <>
+              <img src={photo('hero-terreno-vista-rio', 1280)}
+                alt="Vista del proyecto"
+                className="w-full h-full object-cover opacity-80"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <button onClick={() => setPlay(true)}
+                  className="group flex items-center gap-4 bg-white/10 backdrop-blur-sm border border-white/25 text-white pl-6 pr-8 py-5 rounded-sm hover:bg-white/20 transition-all">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0">
+                    <Play className="w-5 h-5 text-zinc-900 ml-0.5" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-semibold tracking-wide">Ver video del proyecto</div>
+                    <div className="text-white/50 text-xs">00:32 · Video dron 4K</div>
+                  </div>
+                </button>
+              </div>
+              {/* Overlay tag */}
+              <div className="absolute bottom-5 left-5 bg-black/40 backdrop-blur-sm text-white/70 text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-sm">
+                Mirador del Ñuble · Región del Ñuble, Chile
+              </div>
+            </>
+          ) : (
+            <video
+              autoPlay controls className="w-full h-full object-cover"
+              poster={photo('hero-terreno-vista-rio', 1280)}
+            >
+              <source src={VIDEO} type="video/mp4" />
+            </video>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// PARCELAS — grid limpio, todas disponibles
+// ─────────────────────────────────────────────────────────────
+
+function Parcelas() {
+  const [sel, setSel] = useState(null)
+  const [page, setPage] = useState(0)
+  const PER = 10
+  const shown = LOTS.slice(page * PER, page * PER + PER)
+  const pages = Math.ceil(LOTS.length / PER)
+
+  return (
+    <section id="parcelas" className="bg-white py-24 lg:py-36 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-14 gap-6">
+          <div>
+            <div className="flex items-center gap-4 mb-5">
+              <span className="block h-px w-12 bg-zinc-200" />
+              <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">Disponibilidad</span>
+            </div>
+            <h2 className="font-serif font-light text-zinc-900 leading-tight"
+              style={{ fontSize:'clamp(2.2rem, 5vw, 4rem)' }}>
+              Elige tu parcela ideal
+            </h2>
+            <p className="text-zinc-400 text-sm mt-3 leading-relaxed max-w-md">
+              Preventa en verde · 20 parcelas disponibles · Precio de lanzamiento
+            </p>
+          </div>
+          <div className="flex items-center gap-2 bg-brand-50 border border-brand-100 px-4 py-3 rounded-sm self-start">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-600 animate-pulse shrink-0" />
+            <span className="text-brand-700 text-[11px] font-semibold tracking-[0.15em] uppercase">
+              20 parcelas disponibles
+            </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2">
-          {LOTS.map(lot => {
+        {/* Grid de parcelas */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
+          {shown.map(lot => {
             const isSel = sel?.id === lot.id
             return (
               <button key={lot.id} onClick={() => setSel(isSel ? null : lot)}
-                className={`relative p-4 text-left border rounded-sm transition-all duration-200 group ${
+                className={`relative p-4 text-left border rounded-sm transition-all ${
                   isSel
-                    ? 'bg-amber-400/12 border-amber-400 scale-[1.02] shadow-lg shadow-amber-400/10'
-                    : 'bg-white/[0.03] border-white/8 hover:border-brand-500/50 hover:bg-brand-500/5'
+                    ? 'bg-zinc-900 border-zinc-900 shadow-md'
+                    : 'bg-white border-zinc-100 hover:border-zinc-300 hover:shadow-sm'
                 }`}>
                 {lot.star && (
-                  <span className="absolute top-2 right-2 text-amber-400 text-[10px]">★</span>
+                  <span className="absolute top-2 right-2 text-[#b8934a] text-[11px]">★</span>
                 )}
-                <div className={`font-bold text-base mb-1 ${isSel ? 'text-amber-400' : 'text-white'}`}>
+                <div className={`font-semibold text-sm mb-1 ${isSel ? 'text-white' : 'text-zinc-800'}`}>
                   {lot.label}
                 </div>
-                <div className="text-white/40 text-xs mb-3">{lot.size}</div>
-                <div className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-1 rounded-full bg-brand-500/15 text-brand-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0" />
+                <div className={`text-xs mb-3 ${isSel ? 'text-white/50' : 'text-zinc-400'}`}>{lot.size}</div>
+                <div className={`text-[10px] font-semibold tracking-wide ${isSel ? 'text-brand-400' : 'text-brand-700'}`}>
                   Disponible
                 </div>
               </button>
@@ -460,187 +468,230 @@ function ParcelasSection() {
           })}
         </div>
 
+        {/* Paginación */}
+        {pages > 1 && (
+          <div className="flex gap-2 mb-6">
+            {Array.from({ length: pages }).map((_, i) => (
+              <button key={i} onClick={() => { setPage(i); setSel(null) }}
+                className={`w-8 h-8 text-xs font-semibold rounded-sm transition-all ${page === i ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'}`}>
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Panel de detalle */}
         {sel && (
-          <div className="mt-4 border border-amber-400/20 bg-amber-400/5 rounded-sm p-6 lg:p-8">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="border border-zinc-100 bg-zinc-50 rounded-sm p-6 lg:p-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
               {[
-                { k:'Parcela',    v: sel.label,   gold: true },
-                { k:'Superficie', v: sel.size,    gold: false },
-                { k:'Precio',     v: sel.price,   gold: true },
-                { k:'Vista',      v: sel.view,    gold: false },
-              ].map(({ k, v, gold }) => (
+                { k:'Parcela',    v:sel.label, accent:false },
+                { k:'Superficie', v:sel.size,  accent:false },
+                { k:'Precio',     v:sel.price, accent:true  },
+                { k:'Vista',      v:sel.view,  accent:false },
+              ].map(({ k, v, accent }) => (
                 <div key={k}>
-                  <div className="text-white/25 text-[10px] tracking-[0.25em] uppercase mb-1.5">{k}</div>
-                  <div className={`font-bold text-xl ${gold ? 'text-amber-400' : 'text-white'}`}>{v}</div>
+                  <div className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase mb-1.5">{k}</div>
+                  <div className={`font-serif text-2xl font-light ${accent ? '' : 'text-zinc-800'}`}
+                    style={accent ? { color:'#b8934a' } : {}}>
+                    {v}
+                  </div>
                 </div>
               ))}
             </div>
-            <div className="mt-6 pt-6 border-t border-amber-400/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <p className="text-white/40 text-sm">
-                Interesado en <span className="text-white font-semibold">{sel.label}</span> — {sel.view}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-5 border-t border-zinc-200">
+              <p className="text-zinc-400 text-sm">
+                Proyecto en preventa · Parcela <strong className="text-zinc-700">{sel.label}</strong> disponible
               </p>
               <a href="#contacto"
-                className="inline-flex items-center gap-2 bg-amber-400 text-black text-sm font-bold px-6 py-3 rounded-sm hover:bg-amber-300 transition-colors whitespace-nowrap shrink-0 tracking-wide">
+                className="inline-flex items-center gap-2.5 bg-zinc-900 text-white text-[11px] font-semibold px-7 py-3.5 rounded-sm hover:bg-zinc-700 transition-colors tracking-widest uppercase shrink-0">
                 Cotizar {sel.label}
-                <Arrow className="w-4 h-4" />
+                <Arrow className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>
         )}
-
-        <p className="text-white/20 text-[10px] tracking-[0.2em] uppercase text-center mt-8">
-          ★ Parcelas destacadas por vista o superficie especial
-        </p>
       </div>
     </section>
   )
 }
 
 // ─────────────────────────────────────────────────────────────
-// VENTAJAS
+// GALERÍA — editorial stagger, fondo crema
 // ─────────────────────────────────────────────────────────────
 
-function VentajasSection() {
+function Galeria() {
   return (
-    <section className="bg-[#080f08] border-t border-white/5 py-28 lg:py-40">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-14 gap-6">
-          <div>
-            <Label text="Por qué invertir ahora" gold />
-            <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
-              Todo incluido.<br />
-              <span className="text-amber-400">Nada oculto.</span>
-            </h2>
-          </div>
-          <p className="text-white/35 text-sm leading-relaxed max-w-xs lg:text-right">
-            El precio de lanzamiento en verde es tu única ventana para entrar antes de la plusvalía.
-          </p>
-        </div>
+    <section id="galeria" className="bg-zinc-50 py-24 lg:py-36 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {VENTAJAS.map((v, i) => (
-            <div key={i} className="bg-white/[0.03] border border-white/8 rounded-sm p-6 lg:p-7 flex gap-4 hover:border-amber-400/25 hover:bg-amber-400/3 transition-all group">
-              <div className="text-3xl shrink-0 mt-0.5">{v.ico}</div>
-              <div className="flex-1">
-                <div className="font-bold text-white text-[14px] mb-1.5">{v.title}</div>
-                <div className="text-white/40 text-sm leading-relaxed">{v.desc}</div>
-              </div>
-              <div className="text-amber-400 font-black text-sm shrink-0 self-start ml-2 group-hover:scale-110 transition-transform">{v.val}</div>
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-14 gap-5">
+          <div>
+            <div className="flex items-center gap-4 mb-5">
+              <span className="block h-px w-12 bg-zinc-200" />
+              <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">Galería</span>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────
-// GALERÍA — bento dramático sobre fondo negro
-// ─────────────────────────────────────────────────────────────
-
-function GallerySection() {
-  return (
-    <section id="galeria" className="bg-black py-28 lg:py-40">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-5">
-          <div>
-            <Label text="Galería · El Entorno" gold />
-            <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
-              El paisaje que<br />
-              <span className="text-amber-400">te espera cada día</span>
+            <h2 className="font-serif font-light text-zinc-900 leading-tight"
+              style={{ fontSize:'clamp(2.2rem, 5vw, 4rem)' }}>
+              El entorno que<br />
+              <em className="not-italic" style={{ color:'#b8934a' }}>te espera</em>
             </h2>
           </div>
-          <p className="text-white/30 text-sm max-w-xs lg:text-right leading-relaxed">
-            Naturaleza nativa, lomajes suaves, el Río Ñuble y la cordillera como horizonte permanente.
+          <p className="text-zinc-400 text-sm max-w-xs leading-relaxed">
+            Lomajes suaves, bosque nativo, el Río Ñuble y la cordillera como horizonte permanente.
           </p>
         </div>
 
-        <div className="grid gap-2 lg:gap-2.5"
-          style={{ gridTemplateColumns:'repeat(3,1fr)', gridTemplateRows:'280px 280px' }}>
-          {GALLERY.map(g => (
-            <div key={g.id} className={`overflow-hidden rounded-sm group relative ${g.cls}`}>
+        {/* Grid editorial asimétrico */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {GALLERY_IMGS.map((g, i) => (
+            <div key={i}
+              className={`overflow-hidden rounded-sm group ${
+                g.wide
+                  ? 'sm:col-span-2 aspect-[16/9]'
+                  : 'aspect-[4/3]'
+              }`}>
               <img src={g.src} alt={g.alt}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-90 group-hover:brightness-100"
+                className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700 brightness-95 group-hover:brightness-100"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-3 left-3 text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 tracking-wide">
-                {g.alt}
-              </div>
             </div>
           ))}
         </div>
-
-        <p className="text-white/20 text-[10px] tracking-[0.25em] uppercase text-center mt-6">
-          Imágenes del terreno · Optimizadas vía Cloudinary · Región del Ñuble, Chile
-        </p>
       </div>
     </section>
   )
 }
 
 // ─────────────────────────────────────────────────────────────
-// UBICACIÓN — mapa satélite + tags
+// VENTAJAS — lista editorial con números, no cards
 // ─────────────────────────────────────────────────────────────
 
-function UbicacionSection() {
+function Ventajas() {
+  return (
+    <section className="bg-white py-24 lg:py-36 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-16 lg:gap-24">
+
+          <div className="lg:sticky lg:top-24 self-start">
+            <div className="flex items-center gap-4 mb-5">
+              <span className="block h-px w-12 bg-zinc-200" />
+              <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">Lo que incluye</span>
+            </div>
+            <h2 className="font-serif font-light text-zinc-900 leading-tight mb-6"
+              style={{ fontSize:'clamp(2rem, 4vw, 3.5rem)' }}>
+              Todo incluido.<br />
+              <em className="not-italic" style={{ color:'#b8934a' }}>Nada oculto.</em>
+            </h2>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Cada parcela viene con lo esencial para que puedas planificar, construir y disfrutar
+              sin sorpresas.
+            </p>
+          </div>
+
+          <div className="divide-y divide-zinc-100">
+            {VENTAJAS.map((v, i) => (
+              <div key={i} className="py-7 flex gap-6 group hover:pl-2 transition-all duration-300">
+                <span className="font-serif text-zinc-200 text-4xl font-light leading-none shrink-0 group-hover:text-zinc-300 transition-colors">
+                  {v.n}
+                </span>
+                <div>
+                  <div className="font-semibold text-zinc-800 text-[15px] mb-1.5">{v.title}</div>
+                  <div className="text-zinc-400 text-sm leading-relaxed">{v.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────
+// UBICACIÓN — mapa grande + info lateral elegante
+// ─────────────────────────────────────────────────────────────
+
+function Ubicacion() {
   const LAT = '-36.578819', LNG = '-72.256633'
   const mapSrc = `https://maps.google.com/maps?q=${LAT},${LNG}&t=k&z=15&ie=UTF8&iwloc=&output=embed`
+  const mapsUrl = `https://maps.google.com/?q=${LAT},${LNG}`
+
+  const tags = [
+    { icon:'🚗', label:'3 min',   sub:'Puente El Ala' },
+    { icon:'🏙️', label:'15 min', sub:'Chillán' },
+    { icon:'🚗', label:'1h 20',  sub:'Concepción' },
+    { icon:'🌊', label:'Vista',   sub:'Río Ñuble' },
+    { icon:'🛣️', label:'100%',   sub:'Asfaltado' },
+    { icon:'🏔️', label:'75 km',  sub:'Termas Chillán' },
+  ]
 
   return (
-    <section id="ubicacion" className="bg-[#040a04] border-t border-white/5 py-28 lg:py-40">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="grid lg:grid-cols-[1fr_1.6fr] gap-12 lg:gap-16 items-start">
+    <section id="ubicacion" className="bg-zinc-50 py-24 lg:py-36 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-14">
+          <span className="block h-px w-12 bg-zinc-200" />
+          <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">Ubicación</span>
+        </div>
+
+        <div className="grid lg:grid-cols-[1fr_1.8fr] gap-12 lg:gap-16 items-start">
+
+          {/* Info */}
           <div>
-            <Label text="Ubicación" gold />
-            <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-5">
-              A minutos de todo,<br />
-              <span className="text-amber-400">en plena naturaleza</span>
+            <h2 className="font-serif font-light text-zinc-900 leading-tight mb-6"
+              style={{ fontSize:'clamp(2rem, 4vw, 3.5rem)' }}>
+              Cerca de todo,<br />
+              <em className="not-italic" style={{ color:'#b8934a' }}>lejos del ruido</em>
             </h2>
-            <p className="text-white/45 leading-relaxed mb-8 text-[15px]">
-              Acceso por camino completamente asfaltado hasta la entrada del proyecto.
+            <p className="text-zinc-400 text-sm leading-relaxed mb-10">
+              Acceso completamente asfaltado hasta la entrada del proyecto. Coordenadas precisas para llegar sin complicaciones.
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-8">
-              {MAP_TAGS.map(t => (
-                <span key={t} className="bg-white/4 border border-white/8 text-white/60 text-xs px-3 py-1.5 rounded-full">
-                  {t}
-                </span>
+            {/* Distancias */}
+            <div className="grid grid-cols-2 gap-3 mb-10">
+              {tags.map((t, i) => (
+                <div key={i} className="bg-white border border-zinc-100 rounded-sm px-4 py-3.5">
+                  <div className="font-serif text-xl font-light text-zinc-900 mb-0.5">{t.label}</div>
+                  <div className="text-[11px] text-zinc-400">{t.icon} {t.sub}</div>
+                </div>
               ))}
             </div>
 
-            <div className="font-mono text-xs text-white/25 bg-white/3 border border-white/6 px-4 py-3 rounded-sm mb-6">
-              📌 {LAT}° S · {LNG}° W · Región del Ñuble, Chile
+            {/* Coords */}
+            <div className="font-mono text-xs text-zinc-400 bg-white border border-zinc-100 px-4 py-3 rounded-sm mb-5">
+              {LAT}° S · {LNG}° W · Región del Ñuble
             </div>
 
-            <a href={`https://maps.google.com/?q=${LAT},${LNG}`} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 border border-amber-400/40 text-amber-400 text-sm font-bold px-6 py-3.5 rounded-sm hover:bg-amber-400 hover:text-black transition-all tracking-wide">
-              <MapPin className="w-4 h-4" />
+            <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[11px] font-semibold text-zinc-700 border border-zinc-200 px-5 py-3 rounded-sm hover:bg-zinc-900 hover:text-white hover:border-zinc-900 transition-all tracking-widest uppercase">
+              <Pin className="w-3.5 h-3.5" />
               Abrir en Google Maps
-              <ExtLink className="w-3.5 h-3.5" />
+              <ExtLink className="w-3 h-3 opacity-50" />
             </a>
           </div>
 
+          {/* Mapa grande */}
           <div className="relative">
-            <div className="overflow-hidden rounded-sm shadow-2xl shadow-black ring-1 ring-white/8">
+            <div className="overflow-hidden rounded-sm shadow-xl border border-zinc-100">
               <iframe
                 src={mapSrc}
-                width="100%" height="520"
+                width="100%" height="560"
                 style={{ border:0, display:'block' }}
                 allowFullScreen loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Ubicación Mirador del Ñuble"
               />
             </div>
-            <div className="absolute -bottom-4 left-5 bg-[#080f08] border border-white/8 pl-4 pr-6 py-3 rounded-sm flex items-center gap-3 shadow-xl">
-              <div className="w-7 h-7 bg-brand-700/60 border border-brand-500/40 rounded-sm flex items-center justify-center shrink-0">
-                <MapPin className="w-3.5 h-3.5 text-brand-400" />
+            {/* Pin card sobre el mapa */}
+            <div className="absolute -bottom-5 left-5 bg-white border border-zinc-100 shadow-lg px-5 py-3.5 rounded-sm flex items-center gap-3">
+              <div className="w-7 h-7 bg-brand-700 rounded-sm flex items-center justify-center shrink-0">
+                <Pin className="w-3.5 h-3.5 text-white" />
               </div>
               <div>
-                <div className="text-white font-semibold text-sm">Mirador del Ñuble</div>
-                <div className="text-white/35 text-[11px]">Vista satélite · 15 min de Chillán</div>
+                <div className="text-zinc-900 font-semibold text-sm leading-tight">Mirador del Ñuble</div>
+                <div className="text-zinc-400 text-[11px]">15 min de Chillán · Vista satélite</div>
               </div>
             </div>
           </div>
@@ -651,53 +702,56 @@ function UbicacionSection() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// CONTACTO
+// CONTACTO — minimal, generoso
 // ─────────────────────────────────────────────────────────────
 
-function ContactSection() {
+function Contacto() {
   const [form, setForm] = useState({ name:'', email:'', phone:'', interest:'', msg:'' })
   const [sent, setSent] = useState(false)
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
-  const inp = 'w-full bg-transparent border-b border-white/15 text-white placeholder-white/25 text-sm py-3.5 focus:outline-none focus:border-amber-400/60 transition-colors'
+  const inp = 'w-full border-b border-zinc-200 text-zinc-900 placeholder-zinc-300 text-sm py-3.5 focus:outline-none focus:border-zinc-500 transition-colors bg-transparent'
 
   return (
-    <section id="contacto" className="bg-[#040a04] border-t border-white/5 py-28 lg:py-40">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="grid lg:grid-cols-[1fr_1.5fr] gap-16 lg:gap-24">
+    <section id="contacto" className="bg-white py-24 lg:py-36 border-t border-zinc-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
 
           {/* Info */}
           <div>
-            <Label text="Contacto" gold />
+            <div className="flex items-center gap-4 mb-8">
+              <span className="block h-px w-12 bg-zinc-200" />
+              <span className="text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-medium">Contacto</span>
+            </div>
 
-            {/* Logo del proyecto en contacto */}
-            <img src={LOGO_BLANCO} alt="Mirador del Ñuble"
-              className="h-12 w-auto object-contain object-left mb-7 opacity-70"
+            {/* Logo del proyecto */}
+            <img src={LOGO_G} alt="Mirador del Ñuble"
+              className="h-10 w-auto object-contain object-left mb-8 opacity-60"
             />
 
-            <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-              ¿Listo para dar<br />
-              <span className="text-amber-400">el primer paso?</span>
+            <h2 className="font-serif font-light text-zinc-900 leading-tight mb-6"
+              style={{ fontSize:'clamp(2rem, 4vw, 3.5rem)' }}>
+              ¿Listo para<br />
+              <em className="not-italic" style={{ color:'#b8934a' }}>dar el primer paso?</em>
             </h2>
-            <p className="text-white/45 leading-relaxed mb-12 text-[15px]">
-              Un asesor te contactará a la brevedad con disponibilidad, precios actualizados y toda
-              la información sobre el proceso de compra en verde.
+
+            <p className="text-zinc-400 text-sm leading-relaxed mb-12">
+              Un asesor te contactará a la brevedad con disponibilidad, precios actualizados y toda la información del proceso de compra en verde.
             </p>
 
             <div className="space-y-5">
               {[
-                { Icon:Phone,  label:'Teléfono',  val:'+56 9 4567 8901',      href:'tel:+56945678901' },
-                { Icon:Mail,   label:'Email',     val:'ventas@propertymaps.cl', href:'mailto:ventas@propertymaps.cl' },
-                { Icon:MapPin, label:'Proyecto',  val:'15 min de Chillán · Ñuble', href: null },
+                { Icon:Phone, label:'Teléfono',  val:'+56 9 4567 8901',        href:'tel:+56945678901' },
+                { Icon:Mail,  label:'Email',     val:'ventas@propertymaps.cl',  href:'mailto:ventas@propertymaps.cl' },
+                { Icon:Pin,   label:'Proyecto',  val:'15 min de Chillán · Ñuble', href:null },
               ].map(({ Icon, label, val, href }) => (
                 <div key={label} className="flex items-center gap-4">
-                  <div className="w-9 h-9 rounded-sm bg-white/4 border border-white/8 flex items-center justify-center shrink-0">
-                    <Icon className="w-4 h-4 text-amber-400/70" />
-                  </div>
+                  <Icon className="w-4 h-4 text-zinc-300 shrink-0" />
                   <div>
-                    <div className="text-white/25 text-[9px] tracking-[0.25em] uppercase mb-0.5">{label}</div>
+                    <div className="text-[9px] text-zinc-300 tracking-[0.25em] uppercase mb-0.5">{label}</div>
                     {href
-                      ? <a href={href} className="text-white text-sm font-medium hover:text-amber-400 transition-colors">{val}</a>
-                      : <span className="text-white text-sm font-medium">{val}</span>
+                      ? <a href={href} className="text-zinc-700 text-sm hover:text-zinc-900 transition-colors">{val}</a>
+                      : <span className="text-zinc-700 text-sm">{val}</span>
                     }
                   </div>
                 </div>
@@ -706,44 +760,45 @@ function ContactSection() {
           </div>
 
           {/* Formulario */}
-          <div>
+          <div className="bg-zinc-50 rounded-sm p-8 lg:p-10 border border-zinc-100">
             {sent ? (
-              <div className="flex flex-col items-center justify-center h-full text-center py-20 gap-5">
-                <div className="w-16 h-16 rounded-full bg-brand-600/20 border border-brand-500/40 flex items-center justify-center">
-                  <Check className="w-8 h-8 text-brand-400" />
+              <div className="flex flex-col items-center justify-center h-full text-center py-16 gap-5">
+                <div className="w-14 h-14 rounded-full bg-brand-50 border border-brand-100 flex items-center justify-center">
+                  <Check className="w-7 h-7 text-brand-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-white">Solicitud Enviada</h3>
-                <p className="text-white/40 max-w-sm text-sm leading-relaxed">
-                  Un asesor de Property Maps se pondrá en contacto contigo dentro de las próximas
-                  24 horas hábiles con información detallada sobre Mirador del Ñuble.
+                <h3 className="font-serif text-2xl font-light text-zinc-900">Solicitud enviada</h3>
+                <p className="text-zinc-400 max-w-xs text-sm leading-relaxed">
+                  Te contactaremos dentro de las próximas 24 horas hábiles con toda la información.
                 </p>
-                <button onClick={() => setSent(false)} className="text-amber-400 text-sm hover:text-amber-300 transition-colors mt-2">
+                <button onClick={() => setSent(false)} className="text-zinc-400 text-xs hover:text-zinc-600 mt-2 transition-colors">
                   Enviar otra consulta
                 </button>
               </div>
             ) : (
-              <form onSubmit={e => { e.preventDefault(); setSent(true) }} className="space-y-8" noValidate>
-                <div className="grid sm:grid-cols-2 gap-8">
-                  <input type="text" placeholder="Nombre completo" required value={form.name} onChange={set('name')} className={inp} />
-                  <input type="tel"  placeholder="+56 9 XXXX XXXX"          value={form.phone} onChange={set('phone')} className={inp} />
+              <form onSubmit={e => { e.preventDefault(); setSent(true) }} className="space-y-7" noValidate>
+                <div>
+                  <p className="font-serif text-xl font-light text-zinc-800 mb-7">Solicitar información</p>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-7">
+                  <input type="text"  placeholder="Nombre completo" required value={form.name}  onChange={set('name')}  className={inp} />
+                  <input type="tel"   placeholder="+56 9 XXXX XXXX"          value={form.phone} onChange={set('phone')} className={inp} />
                 </div>
                 <input type="email" placeholder="Correo electrónico" required value={form.email} onChange={set('email')} className={inp} />
-                <select value={form.interest} onChange={set('interest')}
-                  className={`${inp} appearance-none cursor-pointer`} style={{ background:'transparent' }}>
-                  <option value="" style={{ background:'#040a04' }}>Parcela de interés…</option>
-                  <option value="rio"      style={{ background:'#040a04' }}>Parcela Río – desde $14.900.000</option>
-                  <option value="bosque"   style={{ background:'#040a04' }}>Parcela Bosque – Consultar precio</option>
-                  <option value="grande"   style={{ background:'#040a04' }}>Parcela Grande – Consultar precio</option>
-                  <option value="asesoria" style={{ background:'#040a04' }}>No sé aún, quiero asesoría</option>
+                <select value={form.interest} onChange={set('interest')} className={`${inp} appearance-none cursor-pointer`}>
+                  <option value="">Parcela de interés…</option>
+                  <option value="rio">Parcela Río — desde $14.900.000</option>
+                  <option value="bosque">Parcela Bosque — consultar precio</option>
+                  <option value="grande">Parcela Grande — consultar precio</option>
+                  <option value="asesoria">No sé aún, quiero asesoría</option>
                 </select>
-                <textarea placeholder="Mensaje o consulta (opcional)" rows={3}
+                <textarea placeholder="Mensaje (opcional)" rows={3}
                   value={form.msg} onChange={set('msg')} className={`${inp} resize-none`} />
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-                  <p className="text-white/20 text-xs">Datos confidenciales. Sin spam.</p>
+                  <span className="text-zinc-300 text-xs">Datos confidenciales · Sin spam</span>
                   <button type="submit"
-                    className="inline-flex items-center gap-2.5 bg-amber-400 text-black text-sm font-bold px-8 py-4 rounded-sm hover:bg-amber-300 transition-colors tracking-widest uppercase shrink-0">
-                    Enviar
-                    <Arrow className="w-4 h-4" />
+                    className="inline-flex items-center gap-2.5 bg-zinc-900 text-white text-[11px] font-semibold px-8 py-4 rounded-sm hover:bg-zinc-700 transition-colors tracking-widest uppercase shrink-0">
+                    Enviar solicitud
+                    <Arrow className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </form>
@@ -761,56 +816,48 @@ function ContactSection() {
 
 function Footer() {
   const year = new Date().getFullYear()
-  const cols = {
-    Navegación: ['El Proyecto','Parcelas','Galería','Ubicación','Contacto'],
-    Empresa:    ['Sobre Property Maps','Proyectos en Desarrollo','Prensa'],
-    Legal:      ['Política de Privacidad','Términos de Uso','Normativa SAG'],
-  }
-
   return (
-    <footer className="bg-[#020702] border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
+    <footer className="bg-zinc-900 border-t border-zinc-800">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-14 lg:py-16">
         <div className="grid grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10">
 
           <div className="col-span-2 lg:col-span-1">
-            {/* Property Maps logo (barra superior ya tiene PM) */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 bg-brand-700 rounded flex items-center justify-center shrink-0">
-                <span className="text-white text-[10px] font-bold tracking-wider">PM</span>
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-6 h-6 bg-brand-700 rounded flex items-center justify-center">
+                <span className="text-white text-[9px] font-bold tracking-wider">PM</span>
               </div>
-              <span className="text-white text-[12px] font-semibold tracking-[0.2em] uppercase">Property Maps</span>
+              <span className="text-white text-[11px] font-semibold tracking-[0.2em] uppercase">Property Maps</span>
             </div>
-            <p className="text-white/25 text-xs leading-relaxed mb-5 max-w-[200px]">
+            <p className="text-zinc-500 text-xs leading-relaxed mb-5 max-w-[200px]">
               Corretaje y gestión de subdivisiones agrícolas premium en el sur de Chile.
             </p>
-            {/* Mirador del Ñuble logo en footer */}
-            <img src={LOGO_BLANCO} alt="Mirador del Ñuble"
-              className="h-8 w-auto object-contain object-left opacity-30 mb-5"
+            <img src={LOGO_W} alt="Mirador del Ñuble"
+              className="h-7 w-auto object-contain object-left opacity-25 mb-5"
             />
-            <div className="flex gap-2">
-              <a href="#" className="w-8 h-8 bg-white/4 border border-white/6 rounded-sm flex items-center justify-center text-white/30 hover:text-white hover:border-white/20 transition-colors">
-                <Instagram className="w-3.5 h-3.5" />
-              </a>
-            </div>
+            <a href="#" className="w-8 h-8 bg-zinc-800 border border-zinc-700 rounded-sm inline-flex items-center justify-center text-zinc-500 hover:text-white transition-colors">
+              <IG className="w-3.5 h-3.5" />
+            </a>
           </div>
 
-          {Object.entries(cols).map(([cat, items]) => (
-            <div key={cat}>
-              <h4 className="text-white/40 text-[10px] font-bold tracking-[0.25em] uppercase mb-5">{cat}</h4>
+          {[
+            { title:'Navegación', links:['El Proyecto','Parcelas','Galería','Ubicación','Contacto'] },
+            { title:'Empresa',   links:['Sobre Property Maps','Proyectos','Prensa'] },
+            { title:'Legal',     links:['Privacidad','Términos','Normativa SAG'] },
+          ].map(col => (
+            <div key={col.title}>
+              <h5 className="text-zinc-500 text-[9px] font-bold tracking-[0.25em] uppercase mb-5">{col.title}</h5>
               <ul className="space-y-3">
-                {items.map(item => (
-                  <li key={item}>
-                    <a href="#" className="text-white/25 text-xs hover:text-white/60 transition-colors">{item}</a>
-                  </li>
+                {col.links.map(l => (
+                  <li key={l}><a href="#" className="text-zinc-600 text-xs hover:text-zinc-300 transition-colors">{l}</a></li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
 
-        <div className="mt-14 pt-7 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-white/15 text-xs">© {year} Property Maps SpA. Todos los derechos reservados.</p>
-          <p className="text-white/10 text-xs">Proyecto Mirador del Ñuble · Precios referenciales · Sujeto a disponibilidad</p>
+        <div className="mt-12 pt-7 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-zinc-600 text-xs">© {year} Property Maps SpA. Todos los derechos reservados.</p>
+          <p className="text-zinc-700 text-xs">Precios referenciales · Proyecto en preventa · Sujeto a disponibilidad</p>
         </div>
       </div>
     </footer>
@@ -826,14 +873,15 @@ export default function App() {
     <div className="font-sans">
       <Navbar />
       <main>
-        <HeroSection />
-        <ProximitySection />
-        <ProjectSection />
-        <ParcelasSection />
-        <VentajasSection />
-        <GallerySection />
-        <UbicacionSection />
-        <ContactSection />
+        <Hero />
+        <StatsBar />
+        <Proyecto />
+        <VideoShowcase />
+        <Parcelas />
+        <Galeria />
+        <Ventajas />
+        <Ubicacion />
+        <Contacto />
       </main>
       <Footer />
     </div>
