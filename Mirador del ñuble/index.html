@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Mirador del Ñuble – Parcelas desde $14.900.000</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" type="image/png" href="Fav.png"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="nav-brand">
+      <img src="miradorlogoblanco.png" alt="Mirador del Ñuble" class="nav-logo"/>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#proyecto">El Proyecto</a></li>
+      <li><a href="#parcelas">Parcelas</a></li>
+      <li><a href="#ventajas">Ventajas</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#contacto" class="btn btn-gold btn-icon">Cotizar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <div class="ham" onclick="mO()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div id="mnav">
+  <span class="mnav-x" onclick="mC()">×</span>
+  <img src="miradorlogoblanco.png" alt="Mirador del Ñuble" class="mnav-logo"/>
+  <a href="#proyecto" onclick="mC()">El Proyecto</a>
+  <a href="#parcelas" onclick="mC()">Parcelas</a>
+  <a href="#ventajas" onclick="mC()">Ventajas</a>
+  <a href="#galeria" onclick="mC()">Galería</a>
+  <a href="#contacto" onclick="mC()">Cotizar</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-img-wrap">
+    <img src="fotos/hero-terreno-vista-rio.jpg" alt="Vista aérea Mirador del Ñuble"/>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="eyebrow eyebrow--gold">Región del Ñuble · Chile</div>
+      <h1 class="hero-title">Tu Parcela junto<br><strong>al Río Ñuble</strong></h1>
+      <p class="hero-desc">Parcelas privadas con vistas al río, rodeadas de naturaleza pura y a solo <b>15 minutos de Chillán</b>. Proyecto en verde con entrega el 2° semestre 2027.</p>
+      <div class="hero-btns">
+        <a href="#parcelas" class="btn btn-gold btn-lg btn-icon">Ver parcelas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#contacto" class="btn btn-ghost btn-lg">Hablar con un asesor</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-val">$14,9M</div><div class="hs-lbl">Precio desde</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-val">5.000 m²</div><div class="hs-lbl">Superficie desde</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-val">2027</div><div class="hs-lbl">Entrega 2° Semestre</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-val">15 min</div><div class="hs-lbl">de Chillán</div></div>
+        <div class="hs-sep"></div>
+        <div class="hs"><div class="hs-val">100%</div><div class="hs-lbl">Garantía compra</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Descubrir</span><div class="scroll-arr"></div></div>
+</section>
+
+
+<!-- PROXIMIDAD -->
+<section id="proximidad">
+  <div class="wrap">
+    <div class="prox-header reveal">
+      <div class="eyebrow eyebrow--blue tc" style="justify-content:center">Accesibilidad</div>
+      <h2 class="h1 tc" style="margin-bottom:.6rem">Cerca de todo,<br>lejos del ruido</h2>
+      <p class="lead tc" style="max-width:500px;margin-inline:auto">Acceso por camino asfaltado. A minutos de todo lo que necesitas.</p>
+    </div>
+    <div class="prox-grid" style="margin-top:2.5rem">
+      <div class="prox-card reveal">
+        <div class="prox-time">3</div>
+        <div class="prox-unit">minutos</div>
+        <div class="prox-divider"></div>
+        <div class="prox-place">Puente El Ala</div>
+        <div class="prox-note">Acceso principal al proyecto</div>
+      </div>
+      <div class="prox-card reveal d1">
+        <div class="prox-time">15</div>
+        <div class="prox-unit">minutos</div>
+        <div class="prox-divider"></div>
+        <div class="prox-place">Chillán</div>
+        <div class="prox-note">Servicios, comercio y hospitales</div>
+      </div>
+      <div class="prox-card reveal d2">
+        <div class="prox-time">1:20</div>
+        <div class="prox-unit">horas</div>
+        <div class="prox-divider"></div>
+        <div class="prox-place">Concepción</div>
+        <div class="prox-note">Gran ciudad regional</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EL PROYECTO -->
+<section class="sec sec--lt" id="proyecto">
+  <div class="wrap">
+    <div class="g2">
+      <div class="imgs reveal-left">
+        <div class="img-mosaic">
+          <div class="im-main"><img src="fotos/terreno-camino-rio-nuble.jpg" alt="Terreno con Río Ñuble"/></div>
+          <div class="im-sub1"><img src="fotos/rio-nuble-meandros-1.jpg" alt="Meandros del Río Ñuble"/></div>
+          <div class="im-sub2"><img src="fotos/bosque-con-rio-al-fondo.jpg" alt="Entorno natural"/></div>
+        </div>
+        <div class="im-caption">Vistas reales del proyecto · Región del Ñuble</div>
+      </div>
+      <div class="reveal-right">
+        <div class="eyebrow eyebrow--blue">El Proyecto</div>
+        <h2 class="h1" style="margin-bottom:1.1rem">Vive donde el río<br>y la montaña se encuentran</h2>
+        <p class="lead" style="margin-bottom:.9rem">Mirador del Ñuble está ubicado a <strong>3 minutos del Puente El Ala</strong>, con acceso directo y vistas privilegiadas al Río Ñuble. Un entorno natural único a pocos minutos de la ciudad.</p>
+        <p class="body-sm">Proyecto en verde con entrega para el 2° semestre de 2027. Caminos interiores compactados y estabilizados, servicios básicos disponibles en cada sitio.</p>
+        <div class="checklist">
+          <div class="ci"><div class="ci-icon">✓</div>Caminos compactados</div>
+          <div class="ci"><div class="ci-icon">✓</div>Vista al Río Ñuble</div>
+          <div class="ci"><div class="ci-icon">✓</div>3 min Puente El Ala</div>
+          <div class="ci"><div class="ci-icon">✓</div>15 min de Chillán</div>
+          <div class="ci"><div class="ci-icon">✓</div>1h 20 de Concepción</div>
+          <div class="ci"><div class="ci-icon">✓</div>Garantía de compra</div>
+          <div class="ci"><div class="ci-icon">✓</div>Parcelas desde 5.000 m²</div>
+          <div class="ci"><div class="ci-icon">✓</div>Financiamiento disponible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UBICACIÓN -->
+<section class="sec sec--lt" id="ubicacion">
+  <div class="wrap">
+    <div class="g2">
+      <div class="reveal-left">
+        <div class="eyebrow eyebrow--blue">Ubicación</div>
+        <h2 class="h1" style="margin-bottom:.9rem">A minutos de todo,<br>en plena naturaleza</h2>
+        <p class="lead" style="margin-bottom:1.2rem">Acceso por camino completamente asfaltado hasta la entrada del proyecto. Coordenadas exactas para llegar sin complicaciones.</p>
+        <div class="loc-tags">
+          <span class="loc-tag">📍 3 min · Puente El Ala</span>
+          <span class="loc-tag">🏙️ 15 min · Chillán</span>
+          <span class="loc-tag">🌊 Vista directa · Río Ñuble</span>
+          <span class="loc-tag">🛣️ Acceso 100% asfaltado</span>
+          <span class="loc-tag">🚗 1h 20 · Concepción</span>
+          <span class="loc-tag">🏔️ 75 km · Termas de Chillán</span>
+          <span class="loc-tag">⛷️ 70 km · Ski Chillán</span>
+          <span class="loc-tag">💧 95 km · Laguna Laja</span>
+        </div>
+        <a href="https://maps.google.com/?q=-36.579612,-72.257563" target="_blank" rel="noopener" class="btn btn-navy btn-icon" style="margin-bottom:1rem">
+          📍 Abrir en Google Maps <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+        <div class="loc-coords">📌 -36.5796° S &nbsp;·&nbsp; 72.2575° W &nbsp;·&nbsp; Región del Ñuble, Chile</div>
+      </div>
+      <div class="reveal-right">
+        <div class="map-wrap">
+          <iframe src="https://maps.google.com/maps?q=-36.579612,-72.257563&z=14&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARCELAS -->
+<section class="sec" id="parcelas">
+  <div class="wrap">
+    <div class="tc reveal" style="margin-bottom:3rem">
+      <div class="eyebrow eyebrow--blue" style="justify-content:center">Disponibilidad</div>
+      <h2 class="h1">Elige tu parcela ideal</h2>
+      <p class="lead" style="max-width:520px;margin-inline:auto;margin-top:.8rem">Proyecto en verde con entrega garantizada. Todas las parcelas con acceso al Río Ñuble y caminos interiores estabilizados.</p>
+    </div>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="card-img"><img src="fotos/rio-nuble-meandros-2.jpg" alt="Vista Río Ñuble"/><span class="badge badge-gold">Disponible</span></div>
+        <div class="card-body">
+          <div class="card-title">Parcela Río</div>
+          <p class="card-desc">Con acceso visual directo al Río Ñuble. Plana, luminosa y lista para construir tu proyecto.</p>
+          <div class="card-specs">
+            <div class="card-spec">📐 Desde 5.000 m²</div>
+            <div class="card-spec">🌊 Vista al río</div>
+            <div class="card-spec">🛣️ Acceso directo</div>
+          </div>
+          <div class="card-price">$14.900.000</div>
+          <div class="card-price-note">Precio de lanzamiento · Financiable</div>
+          <a href="#contacto" class="btn btn-navy btn-block btn-icon">Cotizar esta parcela <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+      <div class="card reveal d1">
+        <div class="card-img"><img src="fotos/bosque-proyecto-extension.jpg" alt="Parcela Bosque"/><span class="badge badge-blue">Pocas unidades</span></div>
+        <div class="card-body">
+          <div class="card-title">Parcela Bosque</div>
+          <p class="card-desc">Rodeada de vegetación nativa, máxima privacidad. Perfecta para un retiro ecológico.</p>
+          <div class="card-specs">
+            <div class="card-spec">📐 Desde 8.000 m²</div>
+            <div class="card-spec">🌿 Entorno boscoso</div>
+            <div class="card-spec">🔒 Alta privacidad</div>
+          </div>
+          <div class="card-price">Consultar</div>
+          <div class="card-price-note">Solicita cotización personalizada</div>
+          <a href="#contacto" class="btn btn-navy btn-block btn-icon">Cotizar esta parcela <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+      <div class="card reveal d2">
+        <div class="card-img"><img src="fotos/terreno-camino-rio-nuble.jpg" alt="Parcela Panorámica"/><span class="badge badge-green">Premium</span></div>
+        <div class="card-body">
+          <div class="card-title">Parcela Grande</div>
+          <p class="card-desc">Superficies mayores con vistas privilegiadas. Para quienes buscan el máximo espacio y privacidad.</p>
+          <div class="card-specs">
+            <div class="card-spec">📐 Desde 12.000 m²</div>
+            <div class="card-spec">🌄 Vista amplia</div>
+            <div class="card-spec">⭐ Exclusiva</div>
+          </div>
+          <div class="card-price">Consultar</div>
+          <div class="card-price-note">Cotización personalizada según metraje</div>
+          <a href="#contacto" class="btn btn-outline btn-block btn-icon">Solicitar cotización <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VENTAJAS -->
+<section class="sec sec--lt" id="ventajas">
+  <div class="wrap">
+    <div class="reveal" style="max-width:620px;margin-bottom:3rem">
+      <div class="eyebrow eyebrow--blue">Lo que incluye tu parcela</div>
+      <h2 class="h1">Diseñado para vivir<br>y para invertir bien</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item reveal">
+        <div class="why-ico">🛡️</div>
+        <div class="why-body"><div class="why-title">Escrituración garantizada</div><div class="why-desc">Proceso 100% transparente desde el primer pago. Tu inversión protegida en todo momento.</div></div>
+        <div class="why-val">100%</div>
+      </div>
+      <div class="why-item reveal d1">
+        <div class="why-ico">🏗️</div>
+        <div class="why-body"><div class="why-title">Precio de lanzamiento en verde</div><div class="why-desc">Comprar ahora significa el mejor precio. La plusvalía del proyecto trabaja a tu favor desde hoy.</div></div>
+        <div class="why-val">$14,9M</div>
+      </div>
+      <div class="why-item reveal d2">
+        <div class="why-ico">🛣️</div>
+        <div class="why-body"><div class="why-title">Vialidad asfaltada + interior compactada</div><div class="why-desc">Acceso 100% asfaltado hasta la entrada. Caminos interiores estabilizados para llegar siempre cómodo.</div></div>
+        <div class="why-val">✔</div>
+      </div>
+      <div class="why-item reveal">
+        <div class="why-ico">💧</div>
+        <div class="why-body"><div class="why-title">Servicios básicos en cada sitio</div><div class="why-desc">Agua potable rural y electricidad disponibles. Todo listo para que construyas cuando quieras.</div></div>
+        <div class="why-val">✔</div>
+      </div>
+      <div class="why-item reveal d1">
+        <div class="why-ico">🌊</div>
+        <div class="why-body"><div class="why-title">Vistas al Río Ñuble</div><div class="why-desc">Paisaje natural único como fondo de tu vida diaria. El río visible desde los sitios del proyecto.</div></div>
+        <div class="why-val">✔</div>
+      </div>
+      <div class="why-item reveal d2">
+        <div class="why-ico">💳</div>
+        <div class="why-body"><div class="why-title">Financiamiento directo y flexible</div><div class="why-desc">Pie accesible con cuotas adaptadas a tu presupuesto. Sin trámites bancarios complicados.</div></div>
+        <div class="why-val">Flex.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERÍA -->
+<section class="sec sec--dk" id="galeria">
+  <div class="wrap">
+    <div class="tc reveal" style="margin-bottom:2.5rem">
+      <div class="eyebrow eyebrow--gold" style="justify-content:center">Galería</div>
+      <h2 class="h1 h1--white">El entorno que te espera</h2>
+    </div>
+  </div>
+  <div class="gal-strip" id="galStrip">
+    <div class="gp"><img src="fotos/terreno-camino-rio-nuble.jpg" alt="Vista aérea"/><div class="gp-cap">Vista aérea del proyecto</div></div>
+    <div class="gp"><img src="fotos/rio-nuble-meandros-1.jpg" alt="Río Ñuble"/><div class="gp-cap">Meandros del Río Ñuble</div></div>
+    <div class="gp"><img src="fotos/bosque-con-rio-al-fondo.jpg" alt="Entorno"/><div class="gp-cap">El entorno del proyecto</div></div>
+    <div class="gp"><img src="fotos/camino-interior-bosque.jpg" alt="Vialidad"/><div class="gp-cap">Vialidad interior</div></div>
+    <div class="gp"><img src="fotos/camino-interior-montanas.jpg" alt="Cordillera"/><div class="gp-cap">Vistas a la cordillera</div></div>
+  </div>
+  <div class="gal-bar"><div class="gal-track"><div class="gal-thumb" id="galThumb"></div></div></div>
+</section>
+
+
+<!-- CONTACTO -->
+<section class="sec sec--dk" id="contacto">
+  <div class="wrap">
+    <div class="contact-layout">
+      <div class="cinfo reveal-left">
+        <div class="eyebrow eyebrow--gold">Contáctanos</div>
+        <h2 class="h1 h1--white" style="margin-bottom:1.1rem">¿Listo para dar<br>el primer paso?</h2>
+        <p>Un asesor te contactará a la brevedad con toda la información, precios actualizados y disponibilidad de parcelas.</p>
+        <div class="channels">
+          <div class="ch"><div class="ch-ico">📞</div>+56 9 XXXX XXXX</div>
+          <div class="ch"><div class="ch-ico">✉️</div>contacto@miradordelnuble.cl</div>
+          <div class="ch"><div class="ch-ico">💬</div>WhatsApp disponible</div>
+          <div class="ch"><div class="ch-ico">📍</div>Región del Ñuble, Chile</div>
+        </div>
+      </div>
+      <div class="cform reveal-right">
+        <div class="cform-title">Solicitar información</div>
+        <div class="frow">
+          <div class="fg"><label>Nombre</label><input type="text" placeholder="Tu nombre"/></div>
+          <div class="fg"><label>Apellido</label><input type="text" placeholder="Tu apellido"/></div>
+        </div>
+        <div class="fg"><label>Correo electrónico</label><input type="email" placeholder="correo@ejemplo.cl"/></div>
+        <div class="fg"><label>Teléfono / WhatsApp</label><input type="tel" placeholder="+56 9 XXXX XXXX"/></div>
+        <div class="fg">
+          <label>Parcela de interés</label>
+          <select>
+            <option value="">Seleccionar...</option>
+            <option>Parcela Río – desde $14.900.000</option>
+            <option>Parcela Bosque – Consultar precio</option>
+            <option>Parcela Grande – Consultar precio</option>
+            <option>No sé aún, quiero asesoría</option>
+          </select>
+        </div>
+        <div class="fg"><label>Mensaje (opcional)</label><textarea placeholder="¿Tienes alguna consulta específica?"></textarea></div>
+        <button type="submit" class="btn btn-gold btn-block btn-lg btn-icon">Enviar solicitud <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <img src="miradorlogoblanco.png" alt="Mirador del Ñuble" class="foot-logo"/>
+        <p class="foot-desc">Proyecto inmobiliario de parcelas en plena naturaleza. A orillas del Río Ñuble, a 15 minutos de Chillán.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="#proyecto">El Proyecto</a></li>
+          <li><a href="#parcelas">Parcelas</a></li>
+          <li><a href="#ventajas">Ventajas</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#ubicacion">Ubicación</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Contacto</h5>
+        <ul>
+          <li><a href="tel:+569XXXXXXXX">+56 9 XXXX XXXX</a></li>
+          <li><a href="mailto:contacto@miradordelnuble.cl">Email</a></li>
+          <li><a href="#">WhatsApp</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2025 Mirador del Ñuble. Todos los derechos reservados.</span>
+      <span>Precios referenciales. Proyecto sujeto a disponibilidad.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Navbar
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 60), {passive:true});
+
+// Mobile menu
+const mn = document.getElementById('mnav');
+window.mO = () => { mn.classList.add('open'); document.body.style.overflow='hidden'; };
+window.mC = () => { mn.classList.remove('open'); document.body.style.overflow=''; };
+
+// Scroll reveal (no external dependencies)
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12, rootMargin: '-30px 0px' });
+
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => io.observe(el));
+
+// Gallery drag-to-scroll
+const gs = document.getElementById('galStrip');
+const gt = document.getElementById('galThumb');
+if(gs){
+  let drag=false, sx=0, sl=0;
+  function updThumb(){
+    if(!gt)return;
+    const pct=gs.scrollLeft/(gs.scrollWidth-gs.clientWidth)||0;
+    const w=(gs.clientWidth/gs.scrollWidth)*100;
+    gt.style.width=w+'%';
+    gt.style.left=(pct*(100-w))+'%';
+  }
+  gs.addEventListener('mousedown',e=>{drag=true;gs.classList.add('dragging');sx=e.pageX-gs.offsetLeft;sl=gs.scrollLeft;});
+  ['mouseleave','mouseup'].forEach(ev=>gs.addEventListener(ev,()=>{drag=false;gs.classList.remove('dragging');}));
+  gs.addEventListener('mousemove',e=>{if(!drag)return;e.preventDefault();gs.scrollLeft=sl-(e.pageX-gs.offsetLeft-sx)*1.5;});
+  gs.addEventListener('scroll',updThumb);
+  updThumb();
+}
+</script>
+</body>
+</html>

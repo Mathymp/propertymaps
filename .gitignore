@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# Large binary / source files — no subir a GitHub
+*.MP4
+*.mp4
+*.MOV
+*.mov
+*.DNG
+*.dng
+*.RAW
+*.raw
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
